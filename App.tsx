@@ -24,8 +24,11 @@ import {
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 import {DarkTheme, LightTheme} from './src/helper/Themes';
 import RootNavigator from './src/system/navigation/RootNavigator';
+import {persistor, store} from './src/system/redux/store/store';
 import AppBackgroundContainer from './src/ui/components/AppBackgroundContainer';
 import AppContextProvider from './src/ui/components/AppContextProvider';
 
@@ -148,15 +151,18 @@ const App = () => {
             <NavigationContainer
               theme={scheme === 'dark' ? DarkTheme : LightTheme}
               ref={navigationRef}>
-              {/* <Provider store={store}> */}
-              <RootNavigator />
+              <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                  {/* <Provider store={store}> */}
+                  <RootNavigator />
 
-              <StatusBar
-                backgroundColor={myAppTheme.colors.appBackground}
-                barStyle="dark-content"
-                // barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-              />
-              {/* </Provider> */}
+                  <StatusBar
+                    backgroundColor={myAppTheme.colors.appBackground}
+                    barStyle="dark-content"
+                    // barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+                  />
+                </PersistGate>
+              </Provider>
             </NavigationContainer>
           </AppContextProvider>
         </View>
