@@ -1,8 +1,7 @@
-// import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import React from 'react';
+import React, {useLayoutEffect} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {setAppState} from '../../../system/redux/actions/appActions';
 import {useAppDispatch} from '../../../system/redux/store/hooks';
 import ScreenBackgroundContainerWithOutSafeArea from '../../components/ScreenBackgroundContainerWithOutSafeArea';
 // import AppStyles from '../../App/App.styles';
@@ -14,6 +13,22 @@ const DashboardScreen = ({route}) => {
 
   const navigation = useNavigation();
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Dashboard',
+    });
+  }, []);
+
+  const clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      // clear error
+    }
+
+    console.log('Done.');
+  };
+
   return (
     <ScreenBackgroundContainerWithOutSafeArea theme={colors}>
       <View style={{flex: 1}}>
@@ -21,11 +36,13 @@ const DashboardScreen = ({route}) => {
 
         <TouchableOpacity
           onPress={() => {
-            dispatch(
-              setAppState({
-                appName: 'Fahad',
-              }),
-            );
+            clearAll();
+
+            // dispatch(
+            //   setAppState({
+            //     appName: 'Fahad',
+            //   }),
+            // );
           }}>
           <Text>Hello</Text>
         </TouchableOpacity>

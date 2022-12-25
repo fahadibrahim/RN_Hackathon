@@ -1,18 +1,16 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-// import {w} from '../../helper/Dimensions';
-// import AppDrawer from '../../ui/Screens/Home/Dashboard/AppDrawer';
+import AppDrawer from '../../ui/screens/drawer/AppDrawer';
 import {ScreenNames} from './ScreenNames';
 import {Screens} from './Screens';
 
-
 export default function DrawerNavigator({navigation, route}) {
   const Drawer = createDrawerNavigator();
+
   return (
     <Drawer.Navigator
       initialRouteName={ScreenNames.DashboardScreen}
-      // drawerContent={props => <AppDrawer {...props} />}
+      drawerContent={props => <AppDrawer {...props} />}
       screenOptions={{
         drawerType: 'slide',
         drawerStyle: {
@@ -23,6 +21,20 @@ export default function DrawerNavigator({navigation, route}) {
       <Drawer.Screen
         name={ScreenNames.DashboardScreen}
         component={Screens.DashboardScreen}
+        options={{headerShown: true}}
+        initialParams={route.params}
+      />
+
+      <Drawer.Screen
+        name={ScreenNames.FilteredCategoriesScreen}
+        component={Screens.FilteredCategoriesScreen}
+        options={{headerShown: true}}
+        initialParams={route.params}
+      />
+
+      <Drawer.Screen
+        name={ScreenNames.ManageCategoriesScreen}
+        component={Screens.ManageCategoriesScreen}
         options={{headerShown: true}}
         initialParams={route.params}
       />

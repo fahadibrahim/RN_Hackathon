@@ -21,7 +21,7 @@ const SplashLoadingScreen = () => {
           },
         ],
       });
-    }, 3000);
+    }, 500);
   }, []);
 
   return (

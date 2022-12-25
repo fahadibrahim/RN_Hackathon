@@ -3,4 +3,6 @@ export const ScreenNames = {
 
   DrawerNavigator: 'DrawerNavigator',
   DashboardScreen: 'DashboardScreen',
+  FilteredCategoriesScreen: 'FilteredCategoriesScreen',
+  ManageCategoriesScreen: 'ManageCategoriesScreen',
 };

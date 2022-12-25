@@ -7,6 +7,7 @@ const LightColors = {
   APP_SCREEN_BACKGROUND_COLOR: '#EAEAEA',
 
   APP_ACTIVITY_INDICATOR_COLOR: '#6F44A3',
+  APP_NAV_SELECTION_COLOR: '#DCC3FA',
 
   INPUT: {
     SHADOW_COLOR: '#000000',
@@ -19,6 +20,10 @@ const LightColors = {
   TEXT: {
     PRIMARY: '#000000',
     SECONDARY: '#6740B4',
+  },
+
+  CELL: {
+    BACKGROUND: '#FFFFFF',
   },
 };
 
