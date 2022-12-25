@@ -8,56 +8,129 @@
  * @format
  */
 
-import React, {type PropsWithChildren} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
+  createNavigationContainerRef,
+  NavigationContainer,
+} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  Appearance,
+  Dimensions,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {DarkTheme, LightTheme} from './src/helper/Themes';
+import RootNavigator from './src/system/navigation/RootNavigator';
+import AppBackgroundContainer from './src/ui/components/AppBackgroundContainer';
+import AppContextProvider from './src/ui/components/AppContextProvider';
 
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+// const Section: React.FC<
+//   PropsWithChildren<{
+//     title: string;
+//   }>
+// > = ({children, title}) => {
+//   const isDarkMode = useColorScheme() === 'dark';
+//   return (
+//     <View style={styles.sectionContainer}>
+//       <Text
+//         style={[
+//           styles.sectionTitle,
+//           {
+//             color: isDarkMode ? Colors.white : Colors.black,
+//           },
+//         ]}>
+//         {title}
+//       </Text>
+//       <Text
+//         style={[
+//           styles.sectionDescription,
+//           {
+//             color: isDarkMode ? Colors.light : Colors.dark,
+//           },
+//         ]}>
+//         {children}
+//       </Text>
+//     </View>
+//   );
+// };
 
 const App = () => {
+  // --------OLD CODE-------------
+
+  // const {theme, changeTheme} = useContext(AppContext);
+
+  const [myAppTheme, setMyAppTheme] = useState(LightTheme);
+
+  const scheme = Appearance.getColorScheme();
+
+  const navigationRef = createNavigationContainerRef();
+
+  useEffect(() => {
+    const isPortrait = () => {
+      const dim = Dimensions.get('screen');
+      return dim.height >= dim.width;
+    };
+
+    // store.dispatch(
+    //   setDeviceOrientation({
+    //     orientation: isPortrait()
+    //       ? SCREEN_ORIENTATION_ENUM.PORTRAIT
+    //       : SCREEN_ORIENTATION_ENUM.LANDSCAPE,
+    //   }),
+    // );
+    // setOrientation(
+    //   isPortrait()
+    //     ? SCREEN_ORIENTATION_ENUM.PORTRAIT
+    //     : SCREEN_ORIENTATION_ENUM.LANDSCAPE,
+    // );
+    // setDeviceDisplayValues(Dimensions.get('screen'));
+
+    // const isLandscape = () => {
+    //   const dim = Dimensions.get('screen');
+    //   return dim.width >= dim.height;
+    // };
+
+    Dimensions.addEventListener('change', () => {
+      console.log('fahad Dimension changes:', isPortrait());
+
+      // setOrientation(
+      //   isPortrait()
+      //     ? SCREEN_ORIENTATION_ENUM.PORTRAIT
+      //     : SCREEN_ORIENTATION_ENUM.LANDSCAPE,
+      // );
+      // store.dispatch(
+      //   setDeviceOrientation({
+      //     orientation: isPortrait()
+      //       ? SCREEN_ORIENTATION_ENUM.PORTRAIT
+      //       : SCREEN_ORIENTATION_ENUM.LANDSCAPE,
+      //   }),
+      // );
+    });
+
+    setMyAppTheme(scheme === 'dark' ? DarkTheme : LightTheme);
+
+    const subscription = Appearance.addChangeListener(({colorScheme}) => {
+      // Updated Scheme Color
+      setMyAppTheme(colorScheme === 'dark' ? DarkTheme : LightTheme);
+    });
+
+    return () => {
+      // Remove the subscription at unmount
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('Fahad Theme changes: ', myAppTheme);
+  }, [myAppTheme]);
+
+  // -------- /OLD CODE/-------------
+
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -65,36 +138,30 @@ const App = () => {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
+    <SafeAreaProvider style={backgroundStyle}>
+      <AppBackgroundContainer theme={myAppTheme}>
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            flex: 1,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          <AppContextProvider>
+            <NavigationContainer
+              theme={scheme === 'dark' ? DarkTheme : LightTheme}
+              ref={navigationRef}>
+              {/* <Provider store={store}> */}
+              <RootNavigator />
+
+              <StatusBar
+                backgroundColor={myAppTheme.colors.appBackground}
+                barStyle="dark-content"
+                // barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+              />
+              {/* </Provider> */}
+            </NavigationContainer>
+          </AppContextProvider>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </AppBackgroundContainer>
+    </SafeAreaProvider>
   );
 };
 
