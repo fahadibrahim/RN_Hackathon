@@ -185,7 +185,7 @@ const ManageCategoriesScreen = ({route}) => {
                       if (item.id === obj.structure.id) {
                         obj.structure.attributes.map(att => {
                           if (att.id === attribute.id) {
-                            att.value = updatedText;
+                            att.label = updatedText;
                           }
                         });
 

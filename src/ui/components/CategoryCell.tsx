@@ -49,7 +49,7 @@ export const CategoryCell = ({
               borderBottomWidth: RFValue(0.5),
             }}
             label="Field"
-            value={obj.value}
+            value={obj.label}
             onChangeText={text => {
               // item.categoryName = text;
               onAttributeValueUpdate(obj, text);
@@ -90,7 +90,7 @@ export const CategoryCell = ({
 
   const titleAttribute = item.attributes.find(obj => obj.isTitle);
   const titleAttributeText = !!titleAttribute
-    ? 'Title Field: ' + titleAttribute.value
+    ? 'Title Field: ' + titleAttribute.label
     : 'Title Field: - ';
 
   console.log('Fahad att: ', titleAttribute);
@@ -163,7 +163,7 @@ export const CategoryCell = ({
                           color: colors.black,
                           fontSize: 20,
                         }}>
-                        {opt.value}
+                        {opt.label}
                       </Text>
                     </MenuOption>
                   );
