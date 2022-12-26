@@ -90,6 +90,7 @@ import rootReducer from '../reducers';
 
 const persistConfig = {
   key: 'root',
+  whitelist: ['inventory'],
   storage: AsyncStorage,
 };
 

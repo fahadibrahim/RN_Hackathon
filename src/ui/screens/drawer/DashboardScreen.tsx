@@ -32,201 +32,202 @@ const DashboardScreen = ({route}) => {
 
   const navigation = useNavigation();
 
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
+  // const [date, setDate] = useState(new Date());
+  // const [open, setOpen] = useState(false);
 
-  const [dateItemObject, setDateItemObject] = useState(null);
+  // const [dateItemObject, setDateItemObject] = useState(null);
 
-  const [myData, setMyData] = useState(null);
-  const [mySectionData, setMySectionData] = useState([]);
+  // const [myData, setMyData] = useState(null);
+  // const [mySectionData, setMySectionData] = useState([]);
 
-  const inventory = useAppSelector(state => state.app.inventory);
-  const actionState = useAppSelector(state => state.app.actionState);
-  const actionComponent = useAppSelector(state => state.app.actionComponent);
-  const filteredScreen = useAppSelector(state => state.app.filteredScreen);
+  // const inventory = useAppSelector(state => state.app.inventory);
+  // const actionState = useAppSelector(state => state.app.actionState);
+  // const actionComponent = useAppSelector(state => state.app.actionComponent);
+  // const filteredScreen = useAppSelector(state => state.app.filteredScreen);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: 'Dashboard',
-    });
-  }, []);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerTitle: 'Dashboard',
+  //   });
+  // }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log('Fahad Mount!');
-      updateAttributesFromReduxState();
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     console.log('Fahad Mount!');
+  //     updateAttributesFromReduxState();
 
-      // const unsubscribe = API.subscribe(userId, user => setUser(user));
+  //     // const unsubscribe = API.subscribe(userId, user => setUser(user));
 
-      return () => {
-        if (inventory.length > 0) {
-          let updatedInventory = JSON.parse(JSON.stringify(inventory));
-          updatedInventory.map(obj => {
-            if (!!myData) {
-              if (obj.structure.id === myData.structure.id) {
-                obj.items = myData.items;
-              }
-            }
-          });
+  //     return () => {
+  //       if (inventory.length > 0) {
+  //         let updatedInventory = JSON.parse(JSON.stringify(inventory));
+  //         updatedInventory.map(obj => {
+  //           if (!!myData) {
+  //             if (obj.structure.id === myData.structure.id) {
+  //               obj.items = myData.items;
+  //             }
+  //           }
+  //         });
 
-          dispatch(
-            itemUpdate({
-              data: updatedInventory,
-              actionComponent: ScreenNames.DashboardScreen,
-            }),
-          );
-        }
+  //         dispatch(
+  //           itemUpdate({
+  //             data: updatedInventory,
+  //             actionComponent: ScreenNames.DashboardScreen,
+  //           }),
+  //         );
+  //       }
 
-        console.log('Fahad gone!');
-      };
-    }, []),
-  );
+  //       console.log('Fahad gone!');
+  //     };
+  //   }, []),
+  // );
 
-  useEffect(() => {
-    // console.log("Fahad Mount!");
-    //updateAttributesFromReduxState();
-  }, []);
+  // useEffect(() => {
+  //   // console.log("Fahad Mount!");
+  //   //updateAttributesFromReduxState();
+  // }, []);
 
-  const updateAttributesFromReduxState = () => {
-    const myFilteredInventoryArrayOrigninal = JSON.parse(
-      JSON.stringify(inventory),
-    );
+  // const updateAttributesFromReduxState = () => {
+  //   const myFilteredInventoryArrayOrigninal = JSON.parse(
+  //     JSON.stringify(inventory),
+  //   );
 
-    if (
-      !!myFilteredInventoryArrayOrigninal &&
-      myFilteredInventoryArrayOrigninal.length > 0
-    ) {
-      myFilteredInventoryArrayOrigninal.map(originalObj => {
-        const myFilteredAttributes = JSON.parse(
-          JSON.stringify(originalObj.structure.attributes),
-        );
+  //   if (
+  //     !!myFilteredInventoryArrayOrigninal &&
+  //     myFilteredInventoryArrayOrigninal.length > 0
+  //   ) {
+  //     myFilteredInventoryArrayOrigninal.map(originalObj => {
+  //       const myFilteredAttributes = JSON.parse(
+  //         JSON.stringify(originalObj.structure.attributes),
+  //       );
 
-        const updatedItems = originalObj.items.map(obj => {
-          let updatedAttributes = [];
+  //       const updatedItems = originalObj.items.map(obj => {
+  //         let updatedAttributes = [];
 
-          updatedAttributes = myFilteredAttributes.map(attObj => {
-            const actAtt = {...obj};
-            const matchingAttribute = actAtt.attributes.find(
-              matObject =>
-                matObject.id === attObj.id &&
-                matObject.label === attObj.label &&
-                matObject.type === attObj.type,
-            );
+  //         updatedAttributes = myFilteredAttributes.map(attObj => {
+  //           const actAtt = {...obj};
+  //           const matchingAttribute = actAtt.attributes.find(
+  //             matObject =>
+  //               matObject.id === attObj.id &&
+  //               matObject.label === attObj.label &&
+  //               matObject.type === attObj.type,
+  //           );
 
-            console.log('Map1: ', matchingAttribute);
-            if (!!matchingAttribute) {
-              if (attObj.type === APP_DATA_TYPES.CheckBox) {
-                attObj.boolValue = matchingAttribute.boolValue;
-              } else {
-                attObj.value = matchingAttribute.value;
-              }
+  //           console.log('Map1: ', matchingAttribute);
+  //           if (!!matchingAttribute) {
+  //             if (attObj.type === APP_DATA_TYPES.CheckBox) {
+  //               attObj.boolValue = matchingAttribute.boolValue;
+  //             } else {
+  //               attObj.value = matchingAttribute.value;
+  //             }
 
-              return {...attObj};
-            } else {
-              return {...attObj};
-            }
-          });
-          console.log('Fahad Error: ', updatedAttributes);
+  //             return {...attObj};
+  //           } else {
+  //             return {...attObj};
+  //           }
+  //         });
+  //         console.log('Fahad Error: ', updatedAttributes);
 
-          return {
-            ...obj,
-            attributes: updatedAttributes,
-          };
-        });
+  //         return {
+  //           ...obj,
+  //           attributes: updatedAttributes,
+  //         };
+  //       });
 
-        originalObj.items = updatedItems;
-      });
+  //       originalObj.items = updatedItems;
+  //     });
 
-      setMyData(myFilteredInventoryArrayOrigninal);
+  //     setMyData(myFilteredInventoryArrayOrigninal);
 
-      const vv = myFilteredInventoryArrayOrigninal.map(obj => {
-        return {
-          title: obj.structure.categoryName,
-          data: [{...obj}],
-        };
-      });
+  //     const vv = myFilteredInventoryArrayOrigninal.map(obj => {
+  //       return {
+  //         title: obj.structure.categoryName,
+  //         data: [{...obj}],
+  //       };
+  //     });
 
-      setMySectionData(vv);
-    } else {
-      // setMyData([]);
-    }
-  };
+  //     setMySectionData(vv);
+  //   } else {
+  //     // setMyData([]);
+  //   }
+  // };
+
+  // // useMemo(() => {
+  // //   // let updatedInventory = [...inventory];
+  // //   // updatedInventory.map(obj => {
+  // //   //   if (!!myData) {
+  // //   //     if (obj.structure.id === myData.structure.id) {
+  // //   //       obj.items = myData.items;
+  // //   //     }
+  // //   //   }
+  // //   // });
+
+  // //   // dispatch(
+  // //   //   itemUpdate({
+  // //   //     data: updatedInventory,
+  // //   //     actionComponent: ScreenNames.DashboardScreen,
+  // //   //   }),
+  // //   // );
+  // // }, [myData]);
 
   // useMemo(() => {
-  //   // let updatedInventory = [...inventory];
-  //   // updatedInventory.map(obj => {
-  //   //   if (!!myData) {
-  //   //     if (obj.structure.id === myData.structure.id) {
-  //   //       obj.items = myData.items;
-  //   //     }
-  //   //   }
-  //   // });
+  //   // if (actionState === CATEGORY_UPDATE) {
+  //   //   updateAttributesFromReduxState();
+  //   // } else if (actionState === ITEM_UPDATE) {
+  //   //   dispatch(
+  //   //     appIdle({
+  //   //       data: {},
+  //   //       actionComponent: ScreenNames.DashboardScreen,
+  //   //     }),
+  //   //   );
+  //   // } else {
+  //   //   dispatch(
+  //   //     appIdle({
+  //   //       data: {},
+  //   //       actionComponent: ScreenNames.DashboardScreen,
+  //   //     }),
+  //   //   );
+  //   // }
+  // }, [inventory]);
 
-  //   // dispatch(
-  //   //   itemUpdate({
-  //   //     data: updatedInventory,
-  //   //     actionComponent: ScreenNames.DashboardScreen,
-  //   //   }),
-  //   // );
-  // }, [myData]);
+  // useMemo(() => {
+  //   if (!!myData) {
+  //     setMyData(prevState => {
+  //       let updatedAttributes = prevState.items.map(obj => {
+  //         if (dateItemObject.itemID === obj.id) {
+  //           obj.attributes.map(attObj => {
+  //             if (dateItemObject.attributeItem.id === attObj.id) {
+  //               const formatedString = moment(date).format('DD/MM/YYYY');
 
-  useMemo(() => {
-    // if (actionState === CATEGORY_UPDATE) {
-    //   updateAttributesFromReduxState();
-    // } else if (actionState === ITEM_UPDATE) {
-    //   dispatch(
-    //     appIdle({
-    //       data: {},
-    //       actionComponent: ScreenNames.DashboardScreen,
-    //     }),
-    //   );
-    // } else {
-    //   dispatch(
-    //     appIdle({
-    //       data: {},
-    //       actionComponent: ScreenNames.DashboardScreen,
-    //     }),
-    //   );
-    // }
-  }, [inventory]);
+  //               attObj.value = formatedString;
+  //               attObj.date = date;
+  //             }
+  //           });
+  //           return obj;
+  //         } else {
+  //           return obj;
+  //         }
+  //       });
 
-  useMemo(() => {
-    if (!!myData) {
-      setMyData(prevState => {
-        let updatedAttributes = prevState.items.map(obj => {
-          if (dateItemObject.itemID === obj.id) {
-            obj.attributes.map(attObj => {
-              if (dateItemObject.attributeItem.id === attObj.id) {
-                const formatedString = moment(date).format('DD/MM/YYYY');
+  //       const newState = {
+  //         ...prevState,
+  //         items: updatedAttributes,
+  //       };
 
-                attObj.value = formatedString;
-                attObj.date = date;
-              }
-            });
-            return obj;
-          } else {
-            return obj;
-          }
-        });
+  //       console.log('Fahad log New: ', newState);
 
-        const newState = {
-          ...prevState,
-          items: updatedAttributes,
-        };
+  //       return newState;
+  //     });
+  //   }
+  // }, [date]);
 
-        console.log('Fahad log New: ', newState);
-
-        return newState;
-      });
-    }
-  }, [date]);
-
-  const _keyExtractor = (item, index) => index.toString();
+  // const _keyExtractor = (item, index) => index.toString();
 
   return (
     <ScreenBackgroundContainerWithOutSafeArea theme={colors}>
       <View style={{flex: 1}}>
-        <View
+        <Text>TODO (A FEW BUGS)</Text>
+        {/* <View
           style={{
             flex: 1,
             marginBottom: RFValue(30),
@@ -384,7 +385,7 @@ const DashboardScreen = ({route}) => {
               setOpen(false);
             }}
           />
-        </View>
+        </View> */}
       </View>
     </ScreenBackgroundContainerWithOutSafeArea>
   );
