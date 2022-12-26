@@ -1,5 +1,5 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {Button, Card, Switch, Text, TextInput} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {useDispatch} from 'react-redux';
@@ -10,6 +10,7 @@ export const ItemCell = ({
   itemIndex,
   onItemRemove,
   onAttributeValueUpdate,
+  openDatePicker,
 }) => {
   const navigation = useNavigation();
   // const {colors} = useTheme();
@@ -93,9 +94,12 @@ export const ItemCell = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <Switch value={obj.boolValue} onValueChange={newValue => {
-          onAttributeValueUpdate(item.id, obj, newValue);
-        }} />
+        <Switch
+          value={obj.boolValue}
+          onValueChange={newValue => {
+            onAttributeValueUpdate(item.id, obj, newValue);
+          }}
+        />
 
         <Text style={{marginLeft: RFValue(10)}}>{obj.label}</Text>
       </View>
@@ -117,29 +121,50 @@ export const ItemCell = ({
             alignItems: 'flex-end',
             flexDirection: 'row',
           }}>
-          <TextInput
+          <TouchableOpacity
             style={{
-              flex: 1,
-              borderBottomColor: '#000000',
-              borderBottomWidth: RFValue(0.5),
+              width: '100%',
+              // alignItems: 'flex-end',
+              // flexDirection: 'row',
             }}
-            label={obj.label}
-            value={obj.value}
-            onChangeText={text => {
-              // item.categoryName = text;
-              onAttributeValueUpdate(item.id, obj, text);
-            }}
-          />
+            onPress={() => {
+              openDatePicker(item.id, obj);
+            }}>
+            <TextInput
+              pointerEvents="none"
+              disabled={true}
+              style={{
+                flex: 1,
+                backgroundColor: '#00000000',
+                borderBottomColor: '#000000',
+                borderBottomWidth: RFValue(0.5),
+              }}
+              label={obj.label}
+              value={obj.value}
+              onChangeText={text => {
+                // item.categoryName = text;
+                // onAttributeValueUpdate(item.id, obj, text);
+              }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     );
   };
 
   const titleAttribute = item.attributes.find(obj => obj.isTitle);
-  const headingText =
-    !!titleAttribute && !!titleAttribute.value
-      ? titleAttribute.value
-      : 'Unnamed Field';
+  let headingText = '';
+  if (!!titleAttribute) {
+    if (titleAttribute.type === APP_DATA_TYPES.CheckBox)
+      headingText = !!titleAttribute.label
+        ? titleAttribute.label
+        : 'Unnamed Field';
+  } else {
+    headingText =
+      !!titleAttribute && !!titleAttribute.value
+        ? titleAttribute.value
+        : 'Unnamed Field';
+  }
 
   return (
     <View
@@ -151,7 +176,6 @@ export const ItemCell = ({
       <Card>
         <View
           style={{
-            elevation: 900,
             flex: 1,
             padding: RFValue(10),
             backgroundColor: colors.cellBackground,
