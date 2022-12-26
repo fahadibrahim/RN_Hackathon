@@ -16,7 +16,7 @@ export const CategoryCell = ({
   item,
   onValueUpdate,
   onAttributeAdded,
-  onAttributeValueUpdate,
+  onAttributeLabelUpdate,
   onCategoryRemove,
   onAttributeRemoved,
   onTitleAttributeSelection,
@@ -52,7 +52,7 @@ export const CategoryCell = ({
             value={obj.label}
             onChangeText={text => {
               // item.categoryName = text;
-              onAttributeValueUpdate(obj, text);
+              onAttributeLabelUpdate(obj, text);
             }}
           />
           <Text

@@ -1,5 +1,6 @@
 export interface AppState {
   appName: string;
+  actionComponent: string;
   actionState: string;
   inventory: Array<Machines>;
   filteredScreen: Category;
@@ -24,5 +25,12 @@ export interface Attributes {
   label: string;
   type: string;
   value: string;
+  boolValue: boolean;
+  date: Date;
   isTitle: boolean;
+}
+
+export interface ActionWithPayload {
+  data: any;
+  actionComponent: string;
 }

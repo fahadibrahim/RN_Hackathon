@@ -4,12 +4,9 @@ import {View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {Button} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
+import {ScreenNames} from '../../../system/navigation/ScreenNames';
 import {ADD_NEW_CATEGORY} from '../../../system/redux/actions/actionTypes';
-import {
-  addNewCategoryAction,
-  appIdle,
-  cacheUpdate,
-} from '../../../system/redux/actions/appActions';
+import {appIdle, cacheUpdate} from '../../../system/redux/actions/appActions';
 import {Machines} from '../../../system/redux/reducers/interfaces/interfaces';
 import {
   useAppDispatch,
@@ -28,6 +25,7 @@ const ManageCategoriesScreen = ({route}) => {
   const [myInventory, setMyInventory] = useState([]);
   const inventory = useAppSelector(state => state.app.inventory);
   const actionState = useAppSelector(state => state.app.actionState);
+  const actionComponent = useAppSelector(state => state.app.actionComponent);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -41,7 +39,12 @@ const ManageCategoriesScreen = ({route}) => {
 
   useMemo(() => {
     // if (actionState === CATEGORY_UPDATE) {
-    dispatch(cacheUpdate(myInventory));
+    dispatch(
+      cacheUpdate({
+        data: myInventory,
+        actionComponent: ScreenNames.ManageCategoriesScreen,
+      }),
+    );
     // }
   }, [myInventory]);
 
@@ -49,7 +52,12 @@ const ManageCategoriesScreen = ({route}) => {
     if (actionState === ADD_NEW_CATEGORY) {
       setMyInventory(inventory);
     } else {
-      dispatch(appIdle());
+      dispatch(
+        appIdle({
+          data: {},
+          actionComponent: ScreenNames.ManageCategoriesScreen,
+        }),
+      );
     }
   }, [inventory]);
 
@@ -87,8 +95,7 @@ const ManageCategoriesScreen = ({route}) => {
                 attributes: [],
               },
             };
-
-            dispatch(addNewCategoryAction(newCategory));
+            setMyInventory([...myInventory, newCategory]);
           }}>
           Add New Category
         </Button>
@@ -179,7 +186,7 @@ const ManageCategoriesScreen = ({route}) => {
                     return newState;
                   });
                 }}
-                onAttributeValueUpdate={(attribute, updatedText) => {
+                onAttributeLabelUpdate={(attribute, updatedText) => {
                   setMyInventory(prevState => {
                     const newState = prevState.map(obj => {
                       if (item.id === obj.structure.id) {

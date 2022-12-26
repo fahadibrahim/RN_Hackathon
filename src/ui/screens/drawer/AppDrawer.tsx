@@ -76,7 +76,12 @@ const AppDrawer = (props: any) => {
                     onPress={() => {
                       setCurrentScreen(item.structure.categoryName);
 
-                      dispatch(filteredScreenSelectedAction(item.structure));
+                      dispatch(
+                        filteredScreenSelectedAction({
+                          data: item.structure,
+                          actionComponent: ScreenNames.FilteredCategoriesScreen,
+                        }),
+                      );
 
                       navigation.navigate(
                         ScreenNames.FilteredCategoriesScreen as never,
