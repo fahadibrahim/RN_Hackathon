@@ -40,10 +40,10 @@ const FilteredCategoriesScreen = ({route}) => {
   const actionState = useAppSelector(state => state.app.actionState);
   const actionComponent = useAppSelector(state => state.app.actionComponent);
   const filteredScreen = useAppSelector(state => state.app.filteredScreen);
-
+  
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: filteredScreen.categoryName,
+      headerTitle: 'Filter',
     });
   }, []);
 

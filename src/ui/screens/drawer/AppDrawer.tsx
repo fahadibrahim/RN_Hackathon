@@ -85,7 +85,9 @@ const AppDrawer = (props: any) => {
 
                       navigation.navigate(
                         ScreenNames.FilteredCategoriesScreen as never,
-                        {} as never,
+                        {
+                          headerTitle: filteredScreen.categoryName,
+                        } as never,
                       );
 
                       props.navigation.closeDrawer();

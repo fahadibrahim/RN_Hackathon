@@ -92,8 +92,7 @@ export const CategoryCell = ({
   const titleAttributeText = !!titleAttribute
     ? 'Title Field: ' + titleAttribute.label
     : 'Title Field: - ';
-
-  console.log('Fahad att: ', titleAttribute);
+    
   return (
     <View
       style={{
