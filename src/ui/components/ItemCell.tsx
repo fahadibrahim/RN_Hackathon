@@ -155,15 +155,17 @@ export const ItemCell = ({
   const titleAttribute = item.attributes.find(obj => obj.isTitle);
   let headingText = '';
   if (!!titleAttribute) {
-    if (titleAttribute.type === APP_DATA_TYPES.CheckBox)
+    if (titleAttribute.type === APP_DATA_TYPES.CheckBox) {
       headingText = !!titleAttribute.label
-        ? titleAttribute.label
-        : 'Unnamed Field';
-  } else {
-    headingText =
+      ? titleAttribute.label
+      : 'Unnamed Field';
+    } else {
+      headingText =
       !!titleAttribute && !!titleAttribute.value
         ? titleAttribute.value
         : 'Unnamed Field';
+    }
+      
   }
 
   return (
