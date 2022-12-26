@@ -1,8 +1,11 @@
 export const SET_APP_STATE = 'SET_APP_STATE';
 
 export const APP_IDLE = 'APP_IDLE';
+export const APP_NAVIGATE = 'APP_NAVIGATE';
+
 
 export const ADD_NEW_CATEGORY = 'ADD_NEW_CATEGORY';
 export const FILTERED_SCREEN_SELECTED = 'FILTERED_SCREEN_SELECTED';
 
+export const ITEM_UPDATE = 'ITEM_UPDATE';
 export const CATEGORY_UPDATE = 'CATEGORY_UPDATE';

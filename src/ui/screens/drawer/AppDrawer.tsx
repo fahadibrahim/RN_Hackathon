@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {View} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {ScreenNames} from '../../../system/navigation/ScreenNames';
-import {filteredScreenSelectedAction} from '../../../system/redux/actions/appActions';
+import {appNavigate, filteredScreenSelectedAction} from '../../../system/redux/actions/appActions';
 import {
   useAppDispatch,
   useAppSelector,

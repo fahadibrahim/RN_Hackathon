@@ -5,8 +5,11 @@ import {FlatList} from 'react-native-gesture-handler';
 import {Button} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {ScreenNames} from '../../../system/navigation/ScreenNames';
-import {ADD_NEW_CATEGORY} from '../../../system/redux/actions/actionTypes';
-import {appIdle, cacheUpdate} from '../../../system/redux/actions/appActions';
+import {CATEGORY_UPDATE} from '../../../system/redux/actions/actionTypes';
+import {
+  appIdle,
+  categoryUpdate,
+} from '../../../system/redux/actions/appActions';
 import {Machines} from '../../../system/redux/reducers/interfaces/interfaces';
 import {
   useAppDispatch,
@@ -40,7 +43,7 @@ const ManageCategoriesScreen = ({route}) => {
   useMemo(() => {
     // if (actionState === CATEGORY_UPDATE) {
     dispatch(
-      cacheUpdate({
+      categoryUpdate({
         data: myInventory,
         actionComponent: ScreenNames.ManageCategoriesScreen,
       }),
@@ -49,7 +52,7 @@ const ManageCategoriesScreen = ({route}) => {
   }, [myInventory]);
 
   useMemo(() => {
-    if (actionState === ADD_NEW_CATEGORY) {
+    if (actionState === CATEGORY_UPDATE) {
       setMyInventory(inventory);
     } else {
       dispatch(

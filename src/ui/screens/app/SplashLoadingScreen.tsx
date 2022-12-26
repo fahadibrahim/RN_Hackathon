@@ -22,7 +22,7 @@ const SplashLoadingScreen = () => {
   };
 
   useEffect(() => {
-    clearAll();
+    // clearAll();
     setTimeout(() => {
       navigation.reset({
         index: 0,
@@ -33,7 +33,7 @@ const SplashLoadingScreen = () => {
           },
         ],
       });
-    }, 500);
+    }, 5000);
   }, []);
 
   return (

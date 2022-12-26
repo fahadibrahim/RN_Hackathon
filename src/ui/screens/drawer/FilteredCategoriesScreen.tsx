@@ -1,12 +1,15 @@
 import {useNavigation, useTheme} from '@react-navigation/native';
-import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useMemo, useState} from 'react';
 import {FlatList, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {APP_DATA_TYPES} from '../../../helper/enum';
 import {ScreenNames} from '../../../system/navigation/ScreenNames';
-import {ADD_NEW_CATEGORY} from '../../../system/redux/actions/actionTypes';
-import {appIdle, cacheUpdate} from '../../../system/redux/actions/appActions';
+import {
+  CATEGORY_UPDATE,
+  ITEM_UPDATE,
+} from '../../../system/redux/actions/actionTypes';
+import {appIdle, itemUpdate} from '../../../system/redux/actions/appActions';
 import {Category} from '../../../system/redux/reducers/interfaces/interfaces';
 import {
   useAppDispatch,
@@ -22,12 +25,31 @@ const FilteredCategoriesScreen = ({route}) => {
   const dispatch = useAppDispatch();
 
   const navigation = useNavigation();
+
+  const [date, setDate] = useState(undefined);
+  const [open, setOpen] = useState(false);
+
+  const onDismissSingle = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirmSingle = useCallback(
+    (params) => {
+      setOpen(false);
+      setDate(params.date);
+    },
+    [setOpen, setDate]
+  );
+
+
   const [myData, setMyData] = useState(null);
 
   const inventory = useAppSelector(state => state.app.inventory);
   const actionState = useAppSelector(state => state.app.actionState);
   const actionComponent = useAppSelector(state => state.app.actionComponent);
   const filteredScreen = useAppSelector(state => state.app.filteredScreen);
+
+  
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,34 +62,49 @@ const FilteredCategoriesScreen = ({route}) => {
   }, []);
 
   const updateAttributesFromReduxState = () => {
-    const myFilteredInventoryObject = inventory.find(
-      obj => obj.structure.id === filteredScreen.id,
+    const myFilteredInventoryObjectOrigninal = JSON.parse(
+      JSON.stringify(
+        inventory.find(obj => obj.structure.id === filteredScreen.id),
+      ),
     );
 
-    const myFilteredAttributes = [...filteredScreen.attributes];
+    const myFilteredInventoryObject = JSON.parse(
+      JSON.stringify(
+        inventory.find(obj => obj.structure.id === filteredScreen.id),
+      ),
+    );
+
+    const myFilteredAttributes = JSON.parse(
+      JSON.stringify(filteredScreen.attributes),
+    );
 
     const updatedItems = myFilteredInventoryObject.items.map(obj => {
       let updatedAttributes = [];
 
       updatedAttributes = myFilteredAttributes.map(attObj => {
-        const matchingAttribute = obj.attributes.find(
+        const actAtt = {...obj};
+        const matchingAttribute = actAtt.attributes.find(
           matObject =>
             matObject.id === attObj.id &&
             matObject.label === attObj.label &&
             matObject.type === attObj.type,
         );
+        
+        console.log("Map1: ", matchingAttribute);
         if (!!matchingAttribute) {
           if (attObj.type === APP_DATA_TYPES.CheckBox) {
-            attObj.boolValue = matchingAttribute.boboolValue;
+            attObj.boolValue = matchingAttribute.boolValue;
           } else {
             attObj.value = matchingAttribute.value;
           }
 
-          return {...obj};
+          
+          return {...attObj};
         } else {
-          return {...obj};
+          return {...attObj};
         }
       });
+      console.log('Fahad Error: ', updatedAttributes);
 
       return {
         ...obj,
@@ -75,30 +112,37 @@ const FilteredCategoriesScreen = ({route}) => {
       };
     });
 
-    myFilteredInventoryObject.items = updatedItems;
-    setMyData(myFilteredInventoryObject);
+    myFilteredInventoryObjectOrigninal.items = updatedItems;
+    setMyData(myFilteredInventoryObjectOrigninal);
   };
 
   useMemo(() => {
-    inventory.map(obj => {
-      if (!!myData && obj.structure.id === myData.structure.id) {
-        obj.items = myData.items;
+    let updatedInventory = [...inventory];
+    updatedInventory.map(obj => {
+      if (!!myData) {
+        if (obj.structure.id === myData.structure.id) {
+          obj.items = myData.items;
+        }
       }
     });
     dispatch(
-      cacheUpdate({
-        data: inventory,
+      itemUpdate({
+        data: updatedInventory,
         actionComponent: ScreenNames.FilteredCategoriesScreen,
       }),
     );
   }, [myData]);
 
   useMemo(() => {
-    if (
-      actionState === ADD_NEW_CATEGORY &&
-      actionComponent === ScreenNames.FilteredCategoriesScreen
-    ) {
+    if (actionState === CATEGORY_UPDATE) {
       updateAttributesFromReduxState();
+    } else if (actionState === ITEM_UPDATE) {
+      dispatch(
+        appIdle({
+          data: {},
+          actionComponent: ScreenNames.FilteredCategoriesScreen,
+        }),
+      );
     } else {
       dispatch(
         appIdle({
@@ -207,10 +251,13 @@ const FilteredCategoriesScreen = ({route}) => {
                           }
                         });
 
+                        
                         const newState = {
                           ...prevState,
                           items: updatedAttributes,
                         };
+
+                        console.log("Fahad log New: ", newState);
 
                         return newState;
                       });
@@ -229,6 +276,14 @@ const FilteredCategoriesScreen = ({route}) => {
               <Text>No Data to show</Text>
             </View>
           )}
+          {/* <DatePickerModal
+          locale="en"
+          mode="single"
+          visible={open}
+          onDismiss={onDismissSingle}
+          date={date}
+          onConfirm={onConfirmSingle}
+        /> */}
         </View>
       </View>
     </ScreenBackgroundContainerWithOutSafeArea>

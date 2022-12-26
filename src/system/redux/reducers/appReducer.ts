@@ -2,8 +2,10 @@ import {AnyAction} from 'redux';
 import {
   ADD_NEW_CATEGORY,
   APP_IDLE,
+  APP_NAVIGATE,
   CATEGORY_UPDATE,
   FILTERED_SCREEN_SELECTED,
+  ITEM_UPDATE,
   SET_APP_STATE,
 } from '../actions/actionTypes';
 import {AppState} from './interfaces/interfaces';
@@ -54,12 +56,29 @@ export default function appReducer(state = initialState, action: AnyAction) {
       });
     }
 
+    case ITEM_UPDATE: {
+      return Object.assign({}, state, {
+        inventory: action.payload.data,
+        actionComponent: action.payload.actionComponent,
+        actionState: ITEM_UPDATE,
+      });
+    }
+
     case APP_IDLE: {
       return Object.assign({}, state, {
         actionState: APP_IDLE,
         actionComponent: action.payload.actionComponent,
       });
     }
+    
+    case APP_NAVIGATE: {
+      return Object.assign({}, state, {
+        actionState: APP_NAVIGATE,
+        actionComponent: action.payload.actionComponent,
+      });
+    }
+
+    
 
     default:
       return state;
