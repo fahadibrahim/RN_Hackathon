@@ -151,7 +151,25 @@ const ManageCategoriesScreen = ({route}) => {
                           label: '',
                           type: data,
                           value: '',
+                          isTitle: newID === 1 ? true : false,
                         });
+                        return obj;
+                      } else {
+                        return obj;
+                      }
+                    });
+
+                    return newState;
+                  });
+                }}
+                onAttributeRemoved={removeAttObj => {
+                  setMyInventory(prevState => {
+                    const newState = prevState.map(obj => {
+                      if (item.id === obj.structure.id) {
+                        obj.structure.attributes =
+                          obj.structure.attributes.filter(
+                            attObj => attObj.id !== removeAttObj.id,
+                          );
                         return obj;
                       } else {
                         return obj;
@@ -191,6 +209,27 @@ const ManageCategoriesScreen = ({route}) => {
                   setMyInventory(
                     myInventory.filter(obj => item.id !== obj.structure.id),
                   );
+                }}
+                onTitleAttributeSelection={attribute => {
+                  setMyInventory(prevState => {
+                    const newState = prevState.map(obj => {
+                      if (item.id === obj.structure.id) {
+                        obj.structure.attributes.map(att => {
+                          if (att.id === attribute.id) {
+                            att.isTitle = true;
+                          } else {
+                            att.isTitle = false;
+                          }
+                        });
+
+                        return obj;
+                      } else {
+                        return obj;
+                      }
+                    });
+
+                    return newState;
+                  });
                 }}
               />
             );

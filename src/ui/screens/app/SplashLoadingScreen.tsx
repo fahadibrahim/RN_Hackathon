@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {ActivityIndicator, View} from 'react-native';
@@ -10,7 +11,18 @@ const SplashLoadingScreen = () => {
 
   const {colors} = useTheme();
 
+  const clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch (e) {
+      // clear error
+    }
+
+    console.log('Done.');
+  };
+
   useEffect(() => {
+    clearAll();
     setTimeout(() => {
       navigation.reset({
         index: 0,

@@ -24,4 +24,5 @@ export interface Attributes {
   label: string;
   type: string;
   value: string;
+  isTitle: boolean;
 }

@@ -35,7 +35,6 @@ const NavItem = props => {
           ]}>
           {title}
         </Text>
-        {/* <Image style={styles.right_icon} source={next_icon} /> */}
         <Ionicons
           name={'chevron-forward-outline'}
           size={h(4)}
